@@ -33,7 +33,7 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias
 - [React Native](https://reactnative.dev/)
     - [Expo](https://docs.expo.io)
 
-## :heavy_check_mark: Resultado:
+## :heavy_check_mark: Inteface:
 
 - O layout está disponível no **[Figma](https://www.figma.com/file/1SxgOMojOB2zYT0Mdk28lB/)**;
 
@@ -57,7 +57,7 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias
   $ git clone https://github.com/CharlesLB/ecoleta.git
 ```
 
-2. Executando a Aplicação:
+2. Para executar:
 
 ```sh
   # Instale as dependências
