@@ -78,6 +78,9 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias
   # Inicie a aplicação mobile
   $ cd mobile
   $ npm start
+  
+  ## Colocar endereço de IP no arquivo mobile/src/services/axios.ts
+  ## Colocar endereço de IP no arquivo server/src/services/axios.ts
 ```
 
 <a id="como-contribuir"></a>
