@@ -1,78 +1,75 @@
 import { StyleSheet } from "react-native";
 import Constants from "expo-constants";
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 32,
-    paddingTop: 35 + Constants.statusBarHeight,
   },
 
-  pointImage: {
-    width: "100%",
-    height: 120,
-    resizeMode: "cover",
+  main: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+
+  title: {
+    color: '#322153',
+    fontSize: 32,
+    fontFamily: 'Ubuntu_700Bold',
+    maxWidth: 260,
+    marginTop: 64,
+  },
+
+  description: {
+    color: '#6C6C80',
+    fontSize: 16,
+    marginTop: 16,
+    fontFamily: 'Roboto_400Regular',
+    maxWidth: 260,
+    lineHeight: 24,
+  },
+
+  footer: {},
+
+  select: {},
+
+  input: {
+    height: 60,
+    backgroundColor: '#FFF',
     borderRadius: 10,
-    marginTop: 32,
-  },
-
-  pointName: {
-    color: "#322153",
-    fontSize: 28,
-    fontFamily: "Ubuntu_700Bold",
-    marginTop: 24,
-  },
-
-  pointItems: {
-    fontFamily: "Roboto_400Regular",
+    marginBottom: 8,
+    paddingHorizontal: 24,
     fontSize: 16,
-    lineHeight: 24,
-    marginTop: 8,
-    color: "#6C6C80",
-  },
-
-  address: {
-    marginTop: 32,
-  },
-
-  addressTitle: {
-    color: "#322153",
-    fontFamily: "Roboto_500Medium",
-    fontSize: 16,
-  },
-
-  addressContent: {
-    fontFamily: "Roboto_400Regular",
-    lineHeight: 24,
-    marginTop: 8,
-    color: "#6C6C80",
-  },
-
-  footer: {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderColor: "#999",
-    paddingVertical: 30,
-    paddingHorizontal: 32,
-    flexDirection: "row",
-    justifyContent: "space-between",
   },
 
   button: {
-    width: "48%",
-    backgroundColor: "#34CB79",
+    backgroundColor: '#34CB79',
+    height: 60,
+    flexDirection: 'row',
     borderRadius: 10,
-    height: 50,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    overflow: 'hidden',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+
+  buttonIcon: {
+    height: 60,
+    width: 60,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 
   buttonText: {
-    marginLeft: 8,
-    color: "#FFF",
+    flex: 1,
+    justifyContent: 'center',
+    textAlign: 'center',
+    color: '#FFF',
+    fontFamily: 'Roboto_500Medium',
     fontSize: 16,
-    fontFamily: "Roboto_500Medium",
-  },
+  }
 });
+
 
 export default styles;

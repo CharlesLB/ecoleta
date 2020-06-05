@@ -1,109 +1,109 @@
-import React, { useEffect, useState } from "react";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { Feather as Icon, FontAwesome } from "@expo/vector-icons";
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  Text,
-  SafeAreaView,
-  Linking,
-} from "react-native";
-import { RectButton } from "react-native-gesture-handler";
-import * as MailComposer from "expo-mail-composer";
-
-import api from "../../services/api";
+import React, { useCallback, useState, useEffect } from 'react';
+import { Feather as Icon } from '@expo/vector-icons';
+import { View, ImageBackground, Image, Text, KeyboardAvoidingView, Platform } from 'react-native';
+import { RectButton } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+import { Picker } from '@react-native-community/picker';
+import axios from 'axios';
 
 import styles from "./styles";
 
-interface Params {
-  point_id: number;
+interface IBGEUFResponse {
+  sigla: string;
 }
 
-interface Data {
-  point: {
-    image: string;
-    name: string;
-    email: string;
-    whatsapp: string;
-    city: string;
-    uf: string;
-  };
-  items: {
-    title: string;
-  }[];
+interface IBGECityResponse {
+  nome: string;
 }
 
-const Detail: React.FC = () => {
-  const [data, setData] = useState<Data>({} as Data);
+const Home: React.FC = () => {
+  const [ufs, setUfs] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+
+  const [selectedUf, setSelectedUf] = useState<React.ReactText>('0');
+  const [selectedCity, setSelectedCity] = useState<React.ReactText>('0');
 
   const navigation = useNavigation();
-  const route = useRoute();
-
-  const routeParams = route.params as Params;
 
   useEffect(() => {
-    api.get(`points/${routeParams.point_id}`).then((response) => {
-      setData(response.data);
+    axios.get<IBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados').then(({ data }) => {
+      const ufInitials = data.map(uf => uf.sigla);
+      setUfs(ufInitials);
     });
   }, []);
 
-  function handleNavigateBack() {
-    navigation.goBack();
-  }
+  useEffect(() => {
+    if (selectedUf === '0') {
+      return;
+    }
 
-  function handleWhatsapp() {
-    Linking.openURL(
-      `whatsapp://send?phone=${data.point.whatsapp}&text=Tenho interesse sobre a coleta de resíduos`
-    );
-  }
-
-  function handleComposeMail() {
-    MailComposer.composeAsync({
-      subject: "Interesse na coleta de resíduos",
-      recipients: [data.point.email],
+    axios.get<IBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`).then(({ data }) => {
+      const cityNames = data.map(city => city.nome);
+      setCities(cityNames);
     });
-  }
+  }, [selectedUf]);
 
-  if (!data.point) {
-    return null;
-  }
+  const handleNavigateToPoints = useCallback(() => {
+    navigation.navigate('Points', {
+      uf: selectedUf,
+      city: selectedCity
+    });
+  }, [selectedUf, selectedCity]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <TouchableOpacity onPress={handleNavigateBack}>
-          <Icon name="arrow-left" size={30} color="#34cb79" />
-        </TouchableOpacity>
-
-        <Image style={styles.pointImage} source={{ uri: data.point.image }} />
-
-        <Text style={styles.pointName}>{data.point.name}</Text>
-        <Text style={styles.pointItems}>
-          {data.items.map((item) => item.title).join(", ")}
-        </Text>
-
-        <View style={styles.address}>
-          <Text style={styles.addressTitle}>Endereço</Text>
-          <Text style={styles.addressContent}>
-            {data.point.city}, {data.point.uf}
-          </Text>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios'? 'padding' : undefined}>
+      <ImageBackground
+        source={require('../../assets/home-background.png')}
+        style={styles.container}
+        imageStyle={{ width: 274, height: 368 }}
+      >
+        <View style={styles.main}>
+          <Image source={require('../../assets/logo.png')} />
+          <View>
+            <Text style={styles.title}>Seu marketplace de coleta de resíduos</Text>
+            <Text style={styles.description}>Ajudamos pessoas a encontrarem pontos de coleta de forma eficiente.</Text>
+          </View>
         </View>
-      </View>
 
-      <View style={styles.footer}>
-        <RectButton style={styles.button} onPress={handleWhatsapp}>
-          <FontAwesome name="whatsapp" size={20} color="#FFF" />
-          <Text style={styles.buttonText}>Whatsapp</Text>
-        </RectButton>
+        <View style={styles.footer}>
+          <Picker
+            selectedValue={selectedUf}
+            style={styles.input}
+            onValueChange={(value) => setSelectedUf(value)}
+          >
+            <Picker.Item label="Selecione o estado" value="0" />
 
-        <RectButton style={styles.button} onPress={handleComposeMail}>
-          <Icon name="mail" size={20} color="#FFF" />
-          <Text style={styles.buttonText}>E-mail</Text>
-        </RectButton>
-      </View>
-    </SafeAreaView>
+            {ufs.map(item => (
+              <Picker.Item key={item} label={item} value={item} />
+            ))}
+          </Picker>
+
+          <Picker
+            selectedValue={selectedCity}
+            style={styles.input}
+            onValueChange={(value) => setSelectedCity(value)}
+          >
+            <Picker.Item label="Selecione a cidade" value="0" />
+
+            {cities.map(item => (
+              <Picker.Item key={item} label={item} value={item} />
+            ))}
+          </Picker>
+
+          <RectButton style={styles.button} onPress={handleNavigateToPoints}>
+            <View style={styles.buttonIcon}>
+              <Text>
+                <Icon name="arrow-right" color="#fff" size={24} />
+              </Text>
+            </View>
+            <Text style={styles.buttonText}>
+              Entrar
+            </Text>
+          </RectButton>
+        </View>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 };
 
-export default Detail;
+export default Home;
