@@ -168,8 +168,6 @@ const CreatePoint = () => {
       data.append('image', selectedFile);
     }
 
-    
-
     await api.post("points", data);
 
     alert("Ponto de coleta cadastrado");
